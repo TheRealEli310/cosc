@@ -77,6 +77,6 @@ function createFiles(files, target)
     end
 end
 
-allFiles = getRepo("https://api.github.com/repos/"..user.."/"..repo.."/contents")
+allFiles = getRepo("https://api.github.com/repos/"..user.."/"..repo.."/contents/system")
 --print("Saving...")
 createFiles(allFiles, dest)
