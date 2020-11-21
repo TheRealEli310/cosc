@@ -1,4 +1,3 @@
 local qf = fs.open("/system/updqueue/qupdg.lua","w")
-qf.write("shell.run(\"/system/github TheRealEli310 cosc /\")\nfs.delete(\"/system/updqueue/qupdg.lua\")")
+qf.write("fs.delete(\"/system\")\nshell.run(\"/updater/github TheRealEli310 cosc /\")\nfs.delete(\"/updater/updqueue/qupdg.lua\")")
 qf.close()
-shell.run("reboot")

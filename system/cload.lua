@@ -1,8 +1,8 @@
 os.loadAPI("/system/drivers/global/json")
-if fs.exists("/system/updqueue") then
-    upd = fs.list("/system/updqueue")
+if fs.exists("/updater/updqueue") then
+    upd = fs.list("/updater/updqueue")
     for k,v in pairs(upd) do
-        shell.run("/system/update /system/updqueue/"..v)
+        shell.run("/updater/update /updater/updqueue/"..v)
     end
     term.setBackgroundColor(colors.black)
     shell.run("clear")
