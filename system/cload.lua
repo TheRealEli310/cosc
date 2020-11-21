@@ -1,3 +1,4 @@
+os.loadAPI("/system/drivers/global/json")
 if fs.exists("/system/updqueue") then
     upd = fs.list("/system/updqueue")
     for k,v in pairs(upd) do
