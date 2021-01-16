@@ -15,3 +15,5 @@ if http then
     sPath = sPath..":/rom/programs/http"
 end
 shell.setPath( sPath )
+--print("/system/cosc32.lua")
+shell.run("/system/cosc32.lua")

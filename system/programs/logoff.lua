@@ -1,0 +1,1 @@
+coslogon.logoffUser()

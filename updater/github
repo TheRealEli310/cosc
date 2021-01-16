@@ -31,6 +31,57 @@ end
 
 local allFiles = { }
 
+function displayMsg(...)
+
+local tArgs = {...}
+local w, h = term.getSize()
+local wm, hm = w/2, h/2
+term.setCursorPos(1,1)
+term.setBackgroundColor(colors.green)
+term.clear()
+term.setCursorPos(1,1)
+local cPrint = function(text,yoff)
+		if not yoff then
+			yoff = 0
+		end
+        local x2,y2 = term.getCursorPos()
+        local x,y = term.getSize()
+        term.setCursorPos(math.ceil((x / 2) - (text:len() / 2)), (math.ceil(y / 2) + yoff))
+        
+        print(text)
+end
+term.setTextColor(colors.lime)
+cPrint(string.char(140):rep(w+1), -4)
+cPrint(string.char(140):rep(w+1), 4)
+term.setTextColor(colors.white)
+cPrint(" Updating COSC... ", -4)
+cPrint(" Don't turn off your PC ", 4)
+if tArgs[2] and tArgs[3] and tArgs[4] and tArgs[5] then
+  cPrint(tArgs[1],-2)
+  cPrint(tArgs[2],-1)
+  cPrint(tArgs[3],0)
+  cPrint(tArgs[4],1)
+  cPrint(tArgs[5],2)
+elseif tArgs[2] and tArgs[3] and tArgs[4] then
+  cPrint(tArgs[1],-2)
+  cPrint(tArgs[2],-1)
+  cPrint(tArgs[3],1)
+  cPrint(tArgs[4],2)
+elseif tArgs[2] and tArgs[3] then
+	cPrint(tArgs[1],-1)
+	cPrint(tArgs[2],0)
+	cPrint(tArgs[3],1)
+elseif tArgs[2] then
+	cPrint(tArgs[1],-1)
+	cPrint(tArgs[2],1)
+else
+	cPrint(tArgs[1],0)
+end
+term.setBackgroundColor(colors.black)
+term.setCursorPos(1,1)
+
+end
+
 function getRepo(url)
     local rs = http.get(url).readAll()
     local res = json.decode(rs)
@@ -39,7 +90,7 @@ function getRepo(url)
         local data = { }
         
         if j.type == "file" then
-            --print("downloading "..j.download_url)
+            displayMsg("Downloading "..j.download_url.."...")
             data = http.get(j.download_url).readAll()
         elseif j.type == "dir" then
             data = getRepo(j.url)
@@ -67,10 +118,15 @@ function createFiles(files, target)
     
     for i,j in pairs(files) do
         if j.type == "file" then
+            displayMsg(target .. "/" .. j.name, "Opening file...")
             local file = fs.open(target.."/"..j.name,"w")
+            displayMsg(target .. "/" .. j.name, "Writing contents...")
             file.write(j.contents)
+            displayMsg(target .. "/" .. j.name, "Flushing file...")
             file.flush()
+            displayMsg(target .. "/" .. j.name, "Completed file writing. Closing...")
             file.close()
+            displayMsg(target .. "/" .. j.name, "Closed file, continuing....")
         elseif j.type == "dir" then
             createFiles(j.contents, target.."/"..j.name)
         end

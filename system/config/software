@@ -1,0 +1,15 @@
+{
+  Goldcore = {
+    COSC = {
+      ui = {
+        AllowTermination = 1,
+      },
+    },
+    Setup = {
+      CMDLine = "/system/oobe/gcoobe.lua",
+      OOBEComplete = 0,
+      RestartSetup = 0,
+      OOBEInProgress = 0,
+    },
+  },
+}

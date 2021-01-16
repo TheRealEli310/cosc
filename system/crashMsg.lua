@@ -40,6 +40,7 @@ function string.split(s, delimiter)
 end
 
 function string.limit(s, limit, mode, noDots)
+	noDots = true
 	local length = string.len(s)
 	
 	if length <= limit then
@@ -136,14 +137,26 @@ print("ERR_CODE: " .. (args[1] and args[1] or "GENERAL"))
 end
 
 function init()
-print("")
-if args[2] then shell.run(args[2]) end
+	print("")
+	if args[2] and not args[2] == "-o" then 
+		shell.run(args[2])
+	elseif args[2] == "-o" then
+		if args[3] then shell.run(args[3]) end
+	end
 end
 
 display()
 init()
 
-if not args[2] then
+local waitStart = true
+
+if args[2] == "-o" then
+	if args[3] then waitStart = false end
+else
+	if args[2] then waitStart = false end
+end
+
+if waitStart then
 print("Press enter...")
 while true do
     local ev, p1 = os.pullEventRaw()
@@ -171,7 +184,14 @@ sleep(0.1)
 end
 
 term.setBackgroundColor(colors.black)
-term.setTextColor(colors.white)
+term.setTextColor(colors.gray)
 term.clear()
 term.setCursorPos(1,1)
-os.reboot()
+sleep(0.1)
+--if not args[2] == "-o" then
+	term.setCursorPos(wm-(("rebooting..."):len()/2), hm)
+	print("rebooting...")
+	sleep(0.5)
+	os.reboot() -- Disabled whenever the second arg is equal to "-o"
+--end
+term.setTextColor(colors.white)

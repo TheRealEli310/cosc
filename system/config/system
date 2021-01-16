@@ -1,0 +1,18 @@
+{
+  Goldcore = {
+    COSC = {
+      Userinit = {
+        CMDLine = "/system/ndenv/ndenv.lua",
+      },
+      ui = {
+        AllowTermination = 1,
+      },
+    },
+    Setup = {
+      RestartSetup = 0,
+      OOBEInProgress = 0,
+      OOBEComplete = 0,
+      CMDLine = "/system/oobe/gcoobe.lua",
+    },
+  },
+}

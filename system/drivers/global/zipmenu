@@ -1,0 +1,123 @@
+local params = {...}
+local cursor = 1
+local selectedColor = colors.white
+local titleColor = colors.white
+local titleBgColor = colors.gray
+local bgColor = colors.cyan
+local txtColor = colors.white
+local timerCount = nil
+local menuExtraText = ""
+
+local function centertext(text, y)
+  local w, h = term.getSize()
+  term.setCursorPos((w/2)-(#text /2), y)
+  term.write(text)
+ end
+
+local function draw(title, menu, extra)
+  local w, h = term.getSize()
+  term.setBackgroundColor(bgColor)
+  term.clear()
+  local t1 = ""
+  if not type(extra) == "number" then
+    t1 = (#extra > 0 and extra or "")
+  else
+    t1 = extra
+  end
+  for i=1, #menu do
+    if(i == cursor) then
+      term.setTextColor(txtColor)
+      centertext("["..menu[i].."]", (h/2)+i-(cursor-1))
+    else
+      term.setTextColor(selectedColor)
+      centertext(" "..menu[i].." ", (h/2)+i-(cursor-1))  
+    end   
+  end
+  term.setCursorPos((w/2)-(#title/2)-4,2)
+  term.setBackgroundColor(titleBgColor)
+  term.setTextColor(titleColor)
+  write((" "):rep(#title+8))
+  centertext(title, 2)
+  term.setCursorPos(1, 1)
+  term.clearLine()
+  write(" " .. cursor .. "/" .. #menu .. " ") 
+  term.setCursorPos(w - 1 - t1:len(), 1)
+  term.write(t1)
+  term.setCursorPos((w/2)-(#title/2)-4,2)
+  term.setBackgroundColor(titleBgColor)
+  term.setTextColor(bgColor)
+  term.write(string.char(144))
+  term.setCursorPos((w/2)+(#title/2)+4,2)
+  term.setBackgroundColor(bgColor)
+  term.setTextColor(titleBgColor)
+  term.write(string.char(159))
+end
+
+function setColors(title, titleBg, bg, selTxt, txt)
+    if txt == nil or title == nil or titleBg == nil or selTxt == nil or bg == nil then error("Specify 5 colors: Title text, Title background, Selection background, Selection text, and Regular Selection text", 2) end
+    titleColor, titleBgColor, bgColor, selectedColor, txtColor = title, titleBg, bg, selTxt, txt
+end
+
+function setTimer(number) end
+
+function setExtraText(text)
+  local t = (text and text or "")
+  menuExtraText = t
+end
+
+function drawMenu(title, ...)
+local args = {...}
+local options
+if type(args[1]) == "table" then
+    options = args[1]
+else
+    options = {...}
+end
+cursor = 1
+count = timerCount
+countDownTimer = nil
+if count then
+  countDownTimer = os.startTimer(1)
+end
+
+while true do
+  draw(title, options, menuExtraText)
+  event, key = os.pullEvent()
+  if event == "key" then
+  if(key == keys.up) or (key == keys.w) then
+    cursor = cursor-1
+  end
+  if(key == keys.down) or (key == keys.s) then
+    cursor = cursor+1
+  end
+  if(key == keys.enter) then
+    term.setBackgroundColor(colors.black)
+    term.setTextColor(colors.white)
+    term.clear()
+    term.setCursorPos(1, 1)
+    break
+  end
+  end
+  if event == "timer" and key == countDownTimer then 
+    count = count - 1
+    if count < 0 then
+      break
+    end
+  end
+  if(cursor > #options) then cursor = #options end
+  if(cursor < 1) then cursor = 1 end
+end
+
+if count then
+  os.cancelTimer(countDownTimer)
+end
+
+return cursor
+end
+
+return {
+  setTimer = setTimer,
+  setExtraText = setExtraText,
+  setColors = setColors,
+  drawMenu = drawMenu
+}
